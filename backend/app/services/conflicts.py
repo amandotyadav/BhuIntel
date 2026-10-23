@@ -358,11 +358,16 @@ def detect_dataset_issues(db: Session, version_id: int, cfg: dict | None = None)
     for c in corr:
         if c.safety == "auto_safe":
             continue
+        m = c.metrics
+        if m.get("original_area") == 0 and m.get("repaired_area"):
+            area_txt = (f"the self-intersecting ring has zero net (signed) area; the repaired geometry covers "
+                        f"{m['repaired_area']:.1f} m²")
+        else:
+            area_txt = f"changes area by {(m.get('area_change_ratio') or 0) * 100:.1f}%"
         conf, _ = upsert_conflict(
             db, pid, "invalid_geometry", [c.source_feature_id], [version_id], 1.0,
-            f"{c.reason}. Proposed repair via {c.method} changes area by "
-            f"{(c.metrics.get('area_change_ratio') or 0) * 100:.0f}% "
-            f"({c.metrics.get('parts_before')} -> {c.metrics.get('parts_after')} parts). Safety class: {c.safety}.",
+            f"{c.reason}. Proposed repair via {c.method}: {area_txt} "
+            f"({m.get('parts_before')} -> {m.get('parts_after')} parts). Safety class: {c.safety}.",
             {"correction_id": c.id, "safety": c.safety, "metrics": c.metrics},
             severity="high" if c.safety == "legal_no_auto" else "medium")
         if c.conflict_id is None:

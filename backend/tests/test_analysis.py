@@ -312,3 +312,76 @@ def test_live_acquisition_reports_unreachable_honestly(analyst, proj):
     assert j["result"]["status"] in ("completed", "unavailable", "no_coverage")
     if j["result"]["status"] != "completed":
         assert j["result"].get("dataset_id") is None  # nothing substituted
+
+
+def test_image_change_detection_finds_added_and_removed_buildings(analyst, proj, tmp_path):
+    """Two co-registered synthetic images rendered from buildings v1 and v2; changed regions must
+    coincide with the buildings that were truly added/removed (ground truth)."""
+    import importlib.util
+
+    import geopandas as gpd
+
+    spec = importlib.util.spec_from_file_location("gen", FIXTURES.parents[1] / "backend" / "scripts" / "generate_fixtures.py")
+    gen = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gen)
+    paths = {}
+    for tag in ("v1", "v2"):
+        rows = gpd.read_file(FIXTURES / f"buildings_source_a_{tag}.geojson").to_crs(32643).to_dict("records")
+        out = tmp_path / tag
+        out.mkdir()
+        gen.write_raster(out, rows)
+        paths[tag] = out / "synthetic_orthophoto.tif"
+    did = analyst.ok(analyst.post(f"{P}/{proj}/datasets", json={"name": "dated imagery", "kind": "imagery",
+                                                                "provenance": "synthetic"}))["id"]
+    vids = []
+    for tag in ("v1", "v2"):
+        with open(paths[tag], "rb") as fh:
+            vid = analyst.ok(analyst.post(f"{P}/{proj}/datasets/{did}/versions",
+                                          files={"file": (f"img_{tag}.tif", fh)}))["version"]["id"]
+        wait_job(analyst, proj, analyst.ok(analyst.post(f"{P}/{proj}/versions/{vid}/process", json={})))
+        vids.append(vid)
+    j = wait_job(analyst, proj, analyst.ok(analyst.post(f"{P}/{proj}/changes", json={"old_version_id": vids[0],
+                                                                                      "new_version_id": vids[1]})))
+    assert j["status"] == "succeeded", j
+    assert j["result"]["pixel_size_m"] == 0.5 and j["result"]["image_change_regions"] >= 3
+    fc = analyst.ok(analyst.get(f"{P}/{proj}/changes", params={"old_version_id": vids[0], "new_version_id": vids[1]}))
+    regions = gpd.GeoSeries([shape(f["geometry"]) for f in fc["features"]], crs=4326).to_crs(32643)
+    a = gpd.read_file(FIXTURES / "buildings_source_a_v1.geojson").to_crs(32643)
+    b = gpd.read_file(FIXTURES / "buildings_source_a_v2.geojson").to_crs(32643)
+    changed = list(a[a.bldg_id.isin(TRUTH["changes"]["removed"])].geometry) + \
+        list(b[b.bldg_id.isin(TRUTH["changes"]["added"])].geometry)
+    for g in changed:  # every truly added/removed building is covered by a detected change region
+        assert any(r.intersection(g).area / g.area > 0.7 for r in regions), g.wkt
+    unchanged = a[a.bldg_id == "MSB-001"].geometry.iloc[0]
+    assert not any(r.intersection(unchanged).area / unchanged.area > 0.3 for r in regions)
+
+
+def test_correction_decisions_reject_defer_and_stale_version(analyst, reviewer, proj):
+    from app.db import SessionLocal
+    from app.models import Correction, IntegratedFeature
+
+    with SessionLocal() as db:
+        f = IntegratedFeature(project_id=proj, feature_class="parcel", integrated_key="parcel:T2",
+                              attributes={"land_use": "residential"}, geom="SRID=4326;POLYGON((73.8 18.5,73.801 18.5,"
+                              "73.801 18.501,73.8 18.501,73.8 18.5))", version=2)
+        db.add(f)
+        db.flush()
+        ids = []
+        for _ in range(3):
+            c = Correction(project_id=proj, integrated_feature_id=f.id, base_version=2, kind="attribute_update",
+                           safety="review_required", proposed_attributes={"land_use": "commercial"}, reason="t",
+                           method="t")
+            db.add(c)
+            db.flush()
+            ids.append(c.id)
+        db.commit()
+    url = f"{P}/{proj}/corrections"
+    assert analyst.post(f"{url}/{ids[0]}/decision", json={"decision": "approve"}).status_code == 403
+    assert reviewer.ok(reviewer.post(f"{url}/{ids[0]}/decision", json={"decision": "defer"}))["status"] == "deferred"
+    assert reviewer.ok(reviewer.post(f"{url}/{ids[1]}/decision", json={"decision": "reject"}))["status"] == "rejected"
+    assert reviewer.post(f"{url}/{ids[1]}/decision", json={"decision": "approve"}).status_code == 409
+    assert reviewer.ok(reviewer.post(f"{url}/{ids[2]}/decision", json={"decision": "approve"}))["outcome"] == "applied"
+    r = reviewer.post(f"{url}/{ids[0]}/decision", json={"decision": "approve"})  # feature is now version 3
+    assert r.status_code == 409 and r.json()["error"]["code"] == "version_conflict"
+    listed = reviewer.ok(reviewer.get(url, params={"status": "rejected"}))
+    assert any(f["properties"]["id"] == ids[1] for f in listed["features"])

@@ -6,7 +6,7 @@ import { boundsOf, type Feature, type FeatureCollection, type Geometry } from ".
 
 export type LayerKind =
   | "study_area" | "parcels" | "buildings" | "predicted" | "conflicts" | "proposed" | "approved" | "integrated_parcels"
-  | "integrated_buildings" | "changes" | "highlight" | "original";
+  | "integrated_buildings" | "changes" | "highlight" | "original" | "records" | "lines";
 
 /** Distinct, documented styles for every layer class (see docs/UI.md). */
 export const LAYER_STYLES: Record<LayerKind, L.PathOptions & { label: string }> = {
@@ -21,6 +21,8 @@ export const LAYER_STYLES: Record<LayerKind, L.PathOptions & { label: string }> 
   integrated_buildings: { label: "Integrated buildings", color: "#334155", weight: 1, fillColor: "#64748b", fillOpacity: 0.6 },
   changes: { label: "Detected changes", color: "#7c3aed", weight: 2, fillColor: "#c4b5fd", fillOpacity: 0.4 },
   highlight: { label: "Selected", color: "#facc15", weight: 4, fillOpacity: 0.1 },
+  records: { label: "Property records (points)", color: "#0f766e", weight: 2, fillColor: "#5eead4", fillOpacity: 0.8 },
+  lines: { label: "Utility lines", color: "#0369a1", weight: 3, fillOpacity: 0 },
   original: { label: "Original geometry", color: "#dc2626", weight: 2, dashArray: "2 4", fillOpacity: 0.05 },
 };
 

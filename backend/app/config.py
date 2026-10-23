@@ -2,9 +2,10 @@
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Annotated
 
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -16,7 +17,8 @@ class Settings(BaseSettings):
     # Security
     secret_key: str = Field(default="dev-insecure-change-me-0123456789abcdef", min_length=32)
     access_token_minutes: int = 60 * 8
-    cors_origins: list[str] = ["http://localhost:5173"]
+    # Comma-separated in the environment (NoDecode: not parsed as JSON).
+    cors_origins: Annotated[list[str], NoDecode] = ["http://localhost:5173"]
     rate_limit_per_minute: int = 300
     login_rate_limit_per_minute: int = 10
 

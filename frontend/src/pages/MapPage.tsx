@@ -9,8 +9,8 @@ import { Badge, Card, ErrorBanner, JsonView, Loading, StatusBadge, fmtNum } from
 import { useProjectId } from "./ProjectLayout";
 
 const KIND_STYLE: Record<string, LayerKind> = {
-  parcels: "parcels", buildings: "buildings", predicted_buildings: "predicted", property_records: "parcels",
-  utility_lines: "buildings", other: "buildings",
+  parcels: "parcels", buildings: "buildings", predicted_buildings: "predicted", property_records: "records",
+  utility_lines: "lines", other: "buildings",
 };
 const SEVERITY_COLOR: Record<string, string> = { critical: "#7f1d1d", high: "#dc2626", medium: "#f97316", low: "#facc15" };
 

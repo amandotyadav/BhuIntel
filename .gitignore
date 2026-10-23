@@ -27,3 +27,4 @@ backend/storage/
 downloads/
 *.joblib
 !fixtures/**
+e2e/node_modules/

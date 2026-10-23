@@ -254,3 +254,10 @@ def test_multipolygon_family_preserved_on_repair():
     mp = MultiPolygon([box(0, 0, 1, 1), box(0.5, 0, 1.5, 1)])  # overlapping parts -> invalid
     r = validate_and_repair(mp, "buildings")
     assert not r.valid and r.repaired.is_valid and r.repaired.geom_type in ("Polygon", "MultiPolygon")
+
+
+def test_cors_origins_accepts_comma_separated_env(monkeypatch):
+    from app.config import Settings
+
+    monkeypatch.setenv("BHU_CORS_ORIGINS", "http://localhost:8080, https://gis.example.org")
+    assert Settings().cors_origins == ["http://localhost:8080", "https://gis.example.org"]

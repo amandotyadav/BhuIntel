@@ -71,12 +71,16 @@ function DecisionForm({ pid, d }: { pid: number; d: ConflictDetail }) {
   const [ack, setAck] = useState(false);
   const m = useApiMutation((decision: string) => api.send("POST", `${projectPath(pid)}/conflicts/${d.id}/decision`,
     { decision, comment, acknowledge_legal: ack }), [["conflict", pid, d.id], ["conflicts", pid], ["corrections", pid], ["queue", pid], ["integrated", pid]]);
+  const decide = (decision: string) => m.mutate(decision, { onSuccess: () => { setComment(""); setAck(false); } });
+  // Acknowledgement is needed when the conflict itself, or any still-open correction it would apply, is legal.
+  const legalCorrection = d.corrections.some((c) => c.safety === "legal_no_auto" && ["proposed", "deferred"].includes(c.status));
+  const needsLegal = d.legal_sensitive || legalCorrection;
   if (!hasRole("reviewer")) return <Notice>Your role ({user?.role}) can view but not decide on conflicts.</Notice>;
   return (
     <div className="space-y-2">
-      {d.legal_sensitive && (
+      {needsLegal && (
         <Notice tone="amber">
-          <strong>Legally sensitive.</strong> Approval requires an admin and an explicit acknowledgement that it is backed by authoritative
+          <strong>Legally sensitive{!d.legal_sensitive ? " correction" : ""}.</strong> Approval requires an admin and an explicit acknowledgement that it is backed by authoritative
           evidence (e.g. survey records). Approval does not move cadastral boundaries in source data; it only updates the derived integrated layer.
           <label className="mt-1 flex items-center gap-2"><input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} />
             I confirm this decision is backed by authoritative evidence</label>
@@ -84,10 +88,10 @@ function DecisionForm({ pid, d }: { pid: number; d: ConflictDetail }) {
       )}
       <Field label="Reviewer comment"><Textarea rows={2} value={comment} onChange={(e) => setComment(e.target.value)} className="font-sans text-sm" /></Field>
       <div className="flex flex-wrap gap-2">
-        <Button variant="success" onClick={() => m.mutate("approve")} loading={m.isPending && m.variables === "approve"}>Approve proposal</Button>
-        <Button variant="danger" onClick={() => m.mutate("reject")} loading={m.isPending && m.variables === "reject"}>Reject</Button>
-        <Button variant="secondary" onClick={() => m.mutate("defer")}>Defer</Button>
-        <Button variant="ghost" onClick={() => m.mutate("comment")} disabled={!comment}>Add comment only</Button>
+        <Button variant="success" onClick={() => decide("approve")} loading={m.isPending && m.variables === "approve"}>Approve proposal</Button>
+        <Button variant="danger" onClick={() => decide("reject")} loading={m.isPending && m.variables === "reject"}>Reject</Button>
+        <Button variant="secondary" onClick={() => decide("defer")}>Defer</Button>
+        <Button variant="ghost" onClick={() => decide("comment")} disabled={!comment}>Add comment only</Button>
       </div>
       <ErrorBanner error={m.error} title="Decision not saved" />
       {m.isSuccess && <Notice tone="green">Decision recorded{(m.data as { correction_outcome?: string })?.correction_outcome ? ` (correction ${(m.data as { correction_outcome?: string }).correction_outcome})` : ""}.</Notice>}
