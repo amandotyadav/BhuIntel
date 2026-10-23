@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply text-slate-900 antialiased;
+}
+
+.leaflet-container {
+  font: inherit;
+  background: #e2e8f0;
+}

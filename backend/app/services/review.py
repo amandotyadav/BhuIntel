@@ -127,7 +127,8 @@ def _attribute_correction(db: Session, conf: Conflict) -> Correction | None:
                    integrated_feature_id=row["id"] if row else None, base_version=row["version"] if row else None,
                    original_attributes={field: (row["attributes"] or {}).get(field)} if row else {},
                    proposed_attributes={field: conf.evidence["proposed_value"]},
-                   reason=f"Resolve attribute conflict on '{field}' using {conf.evidence.get('proposed_source', 'the more reliable source')}",
+                   reason=(f"Resolve attribute conflict on '{field}' using "
+                           f"{conf.evidence.get('proposed_source', 'the more reliable source')}"),
                    method="prefer_more_reliable_then_newer_source", status="proposed",
                    source_feature_id=conf.feature_ids[0] if conf.feature_ids else None)
     db.add(c)
