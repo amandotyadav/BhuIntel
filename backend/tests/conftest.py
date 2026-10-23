@@ -25,9 +25,10 @@ FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "synthetic_pune"
 
 
 def _reset_database() -> None:
-    from alembic import command
     from alembic.config import Config
     from sqlalchemy import create_engine, text
+
+    from alembic import command
 
     eng = create_engine(TEST_DB)
     with eng.begin() as conn:
