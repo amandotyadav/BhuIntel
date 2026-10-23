@@ -1,0 +1,32 @@
+property_number,plot_no,owner_name,land_use,area_sqm,latitude,longitude,data_class
+PROP-1001,P-001,Synthetic Owner 001,residential,1200.0,18.5307223,73.8082621,SYNTHETIC - not an official record
+PROP-1002,p2,Synthetic Owner 002,commercial,1200.0,18.5307240,73.8085463,SYNTHETIC - not an official record
+PROP-1003,P 03,Synthetic Owner 003,residential,1200.0,18.5307258,73.8088304,SYNTHETIC - not an official record
+PROP-1004,Plot No. 4,Synthetic Owner 004,mixed,1200.0,18.5307282,73.8092094,SYNTHETIC - not an official record
+PROP-1005,P-005,Synthetic Owner 005,institutional,1200.0,18.5307300,73.8094935,SYNTHETIC - not an official record
+PROP-1007,P 07,Synthetic Owner 007,residential,1200.0,18.5310837,73.8082596,SYNTHETIC - not an official record
+PROP-1008,Plot No. 8,Synthetic Owner 008,commercial,1200.0,18.5310855,73.8085438,SYNTHETIC - not an official record
+PROP-1009,P-009,Synthetic Owner 009,residential,1200.0,18.5310873,73.8088279,SYNTHETIC - not an official record
+PROP-1010,p10,Synthetic Owner 010,mixed,1200.0,18.5310897,73.8092069,SYNTHETIC - not an official record
+PROP-1011,P 11,Synthetic Owner 011,institutional,1200.0,18.5310915,73.8094910,SYNTHETIC - not an official record
+PROP-1012,Plot No. 12,Synthetic Owner 012,residential,1200.0,18.5310933,73.8097752,SYNTHETIC - not an official record
+PROP-1013,P-013,Synthetic Owner 013,residential,1200.0,18.5314451,73.8082571,SYNTHETIC - not an official record
+PROP-1014,p14,Synthetic Owner 014,commercial,1200.0,18.5314469,73.8085413,SYNTHETIC - not an official record
+PROP-1015,P 15,Synthetic Owner 015,residential,1200.0,18.5314487,73.8088254,SYNTHETIC - not an official record
+PROP-1016,Plot No. 16,Synthetic Owner 016,industrial,1200.0,18.5314511,73.8092044,SYNTHETIC - not an official record
+PROP-1017,P-017,Synthetic Owner 017,institutional,1200.0,18.5314529,73.8094885,SYNTHETIC - not an official record
+PROP-1018,p18,Synthetic Owner 018,residential,1200.0,18.5314547,73.8097727,SYNTHETIC - not an official record
+PROP-1019,P 19,Synthetic Owner 019,residential,1200.0,18.5318066,73.8082546,SYNTHETIC - not an official record
+PROP-1020,Plot No. 20,Synthetic Owner 020,commercial,1200.0,18.5318084,73.8085387,SYNTHETIC - not an official record
+PROP-1021,P-021,Synthetic Owner 021,residential,1200.0,18.5318102,73.8088229,SYNTHETIC - not an official record
+PROP-1022,p22,Synthetic Owner 022,mixed,1200.0,18.5318126,73.8092019,SYNTHETIC - not an official record
+PROP-1023,P 23,Synthetic Owner 023,institutional,1200.0,18.5318161,73.8097702,SYNTHETIC - not an official record
+PROP-1024,Plot No. 24,Synthetic Owner 024,residential,1200.0,18.5318161,73.8097702,SYNTHETIC - not an official record
+PROP-1025,P-025,Synthetic Owner 025,residential,1200.0,18.5321680,73.8082521,SYNTHETIC - not an official record
+PROP-1026,p26,Synthetic Owner 026,commercial,1200.0,18.5321698,73.8085362,SYNTHETIC - not an official record
+PROP-1027,P 27,Synthetic Owner 027,residential,1200.0,18.5321716,73.8088204,SYNTHETIC - not an official record
+PROP-1028,Plot No. 28,Synthetic Owner 028,mixed,1200.0,18.5321740,73.8091993,SYNTHETIC - not an official record
+PROP-1029,P-029,Synthetic Owner 029,institutional,1200.0,18.5321758,73.8094835,SYNTHETIC - not an official record
+PROP-1030,p30,Synthetic Owner 030,residential,1200.0,18.5321776,73.8097677,SYNTHETIC - not an official record
+PROP-9001,P-099,Synthetic Owner 099,residential,1200,,,SYNTHETIC - not an official record
+PROP-1016,Plot No. 16,Synthetic Owner 016,industrial,1200.0,18.5314511,73.8092044,SYNTHETIC - not an official record

@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/coverage/
+e2e/test-results/
+e2e/playwright-report/
+
+# Env / secrets
+.env
+*.env.local
+
+# Runtime data (never commit raw datasets)
+data/
+storage/
+backend/storage/
+downloads/
+*.joblib
+!fixtures/**

@@ -1,0 +1,454 @@
+{
+  "_note": "SYNTHETIC - not an official record",
+  "parcels": {
+    "a_ids": [
+      "P-001",
+      "P-002",
+      "P-003",
+      "P-004",
+      "P-005",
+      "P-006",
+      "P-007",
+      "P-008",
+      "P-009",
+      "P-010",
+      "P-011",
+      "P-012",
+      "P-013",
+      "P-014",
+      "P-015",
+      "P-016",
+      "P-017",
+      "P-018",
+      "P-019",
+      "P-020",
+      "P-021",
+      "P-022",
+      "P-023",
+      "P-024",
+      "P-025",
+      "P-026",
+      "P-027",
+      "P-028",
+      "P-029",
+      "P-031",
+      "P-025"
+    ],
+    "matches_by_geometry": [
+      "P-001",
+      "P-002",
+      "P-003",
+      "P-004",
+      "P-005",
+      "P-006",
+      "P-007",
+      "P-008",
+      "P-009",
+      "P-010",
+      "P-011",
+      "P-012",
+      "P-013",
+      "P-014",
+      "P-015",
+      "P-016",
+      "P-017",
+      "P-018",
+      "P-019",
+      "P-020",
+      "P-021",
+      "P-023",
+      "P-024",
+      "P-025",
+      "P-026",
+      "P-027",
+      "P-029"
+    ],
+    "only_in_a": [
+      "P-028",
+      "P-031"
+    ],
+    "only_in_b": [
+      "P-030"
+    ],
+    "systematic_shift_m": [
+      1.5,
+      0.0
+    ]
+  },
+  "conflicts": [
+    {
+      "category": "invalid_geometry",
+      "parcel": "P-007"
+    },
+    {
+      "category": "parcel_overlap",
+      "parcels": [
+        "P-013",
+        "P-014"
+      ]
+    },
+    {
+      "category": "parcel_gap",
+      "parcels": [
+        "P-020",
+        "P-021"
+      ]
+    },
+    {
+      "category": "sliver_polygon",
+      "parcel": "P-031"
+    },
+    {
+      "category": "duplicate_record",
+      "parcel": "P-025"
+    },
+    {
+      "category": "area_discrepancy",
+      "parcel": "P-004"
+    },
+    {
+      "category": "parcel_id_mismatch",
+      "parcel": "P-015",
+      "other_id": "P-051"
+    },
+    {
+      "category": "attribute_conflict",
+      "parcel": "P-018",
+      "field": "land_use"
+    },
+    {
+      "category": "source_disagreement",
+      "parcel": "P-022"
+    },
+    {
+      "category": "unmatched_feature",
+      "parcel": "P-028",
+      "dataset": "municipal_parcels"
+    },
+    {
+      "category": "unmatched_feature",
+      "parcel": "P-030",
+      "dataset": "revenue_parcels"
+    },
+    {
+      "category": "building_crosses_parcel",
+      "parcels": [
+        "P-010",
+        "P-011"
+      ]
+    },
+    {
+      "category": "unmatched_record",
+      "property": "PROP-9001"
+    },
+    {
+      "category": "duplicate_record",
+      "property": "PROP-1016"
+    },
+    {
+      "category": "attribute_conflict",
+      "property": "PROP-1016",
+      "field": "land_use"
+    }
+  ],
+  "buildings": {
+    "pairs_a_b": [
+      [
+        "MSB-001",
+        "osm-1001"
+      ],
+      [
+        "MSB-002",
+        "osm-1002"
+      ],
+      [
+        "MSB-004",
+        "osm-1004"
+      ],
+      [
+        "MSB-006",
+        "osm-1006"
+      ],
+      [
+        "MSB-007",
+        "osm-1007"
+      ],
+      [
+        "MSB-010",
+        "osm-1010"
+      ],
+      [
+        "MSB-011",
+        "osm-1011"
+      ],
+      [
+        "MSB-012",
+        "osm-1012"
+      ],
+      [
+        "MSB-013",
+        "osm-1013"
+      ],
+      [
+        "MSB-015",
+        "osm-1015"
+      ],
+      [
+        "MSB-016",
+        "osm-1016"
+      ],
+      [
+        "MSB-017",
+        "osm-1017"
+      ],
+      [
+        "MSB-018",
+        "osm-1018"
+      ],
+      [
+        "MSB-020",
+        "osm-1020"
+      ],
+      [
+        "MSB-021",
+        "osm-1021"
+      ],
+      [
+        "MSB-022",
+        "osm-1022"
+      ],
+      [
+        "MSB-023",
+        "osm-1023"
+      ],
+      [
+        "MSB-024",
+        "osm-1024"
+      ],
+      [
+        "MSB-025",
+        "osm-1025"
+      ],
+      [
+        "MSB-028",
+        "osm-1028"
+      ],
+      [
+        "MSB-029",
+        "osm-1029"
+      ],
+      [
+        "MSB-030",
+        "osm-1030"
+      ]
+    ],
+    "only_a": [
+      "MSB-005",
+      "MSB-014",
+      "MSB-027"
+    ],
+    "only_b": [
+      "osm-1008",
+      "osm-1019"
+    ],
+    "duplicate_in_a": "MSB-005",
+    "by_parcel": {
+      "P-001": {
+        "a": "MSB-001",
+        "b": "osm-1001",
+        "parcel": "P-001"
+      },
+      "P-002": {
+        "a": "MSB-002",
+        "b": "osm-1002",
+        "parcel": "P-002"
+      },
+      "P-004": {
+        "a": "MSB-004",
+        "b": "osm-1004",
+        "parcel": "P-004"
+      },
+      "P-005": {
+        "a": "MSB-005",
+        "b": null,
+        "parcel": "P-005"
+      },
+      "P-006": {
+        "a": "MSB-006",
+        "b": "osm-1006",
+        "parcel": "P-006"
+      },
+      "P-007": {
+        "a": "MSB-007",
+        "b": "osm-1007",
+        "parcel": "P-007"
+      },
+      "P-008": {
+        "a": null,
+        "b": "osm-1008",
+        "parcel": "P-008"
+      },
+      "P-010": {
+        "a": "MSB-010",
+        "b": "osm-1010",
+        "parcel": [
+          "P-010",
+          "P-011"
+        ]
+      },
+      "P-011": {
+        "a": "MSB-011",
+        "b": "osm-1011",
+        "parcel": "P-011"
+      },
+      "P-012": {
+        "a": "MSB-012",
+        "b": "osm-1012",
+        "parcel": "P-012"
+      },
+      "P-013": {
+        "a": "MSB-013",
+        "b": "osm-1013",
+        "parcel": "P-013"
+      },
+      "P-014": {
+        "a": "MSB-014",
+        "b": null,
+        "parcel": "P-014"
+      },
+      "P-015": {
+        "a": "MSB-015",
+        "b": "osm-1015",
+        "parcel": "P-015"
+      },
+      "P-016": {
+        "a": "MSB-016",
+        "b": "osm-1016",
+        "parcel": "P-016"
+      },
+      "P-017": {
+        "a": "MSB-017",
+        "b": "osm-1017",
+        "parcel": "P-017"
+      },
+      "P-018": {
+        "a": "MSB-018",
+        "b": "osm-1018",
+        "parcel": "P-018"
+      },
+      "P-019": {
+        "a": null,
+        "b": "osm-1019",
+        "parcel": "P-019"
+      },
+      "P-020": {
+        "a": "MSB-020",
+        "b": "osm-1020",
+        "parcel": "P-020"
+      },
+      "P-021": {
+        "a": "MSB-021",
+        "b": "osm-1021",
+        "parcel": "P-021"
+      },
+      "P-022": {
+        "a": "MSB-022",
+        "b": "osm-1022",
+        "parcel": "P-022"
+      },
+      "P-023": {
+        "a": "MSB-023",
+        "b": "osm-1023",
+        "parcel": "P-023"
+      },
+      "P-024": {
+        "a": "MSB-024",
+        "b": "osm-1024",
+        "parcel": "P-024"
+      },
+      "P-025": {
+        "a": "MSB-025",
+        "b": "osm-1025",
+        "parcel": "P-025"
+      },
+      "P-027": {
+        "a": "MSB-027",
+        "b": null,
+        "parcel": "P-027"
+      },
+      "P-028": {
+        "a": "MSB-028",
+        "b": "osm-1028",
+        "parcel": "P-028"
+      },
+      "P-029": {
+        "a": "MSB-029",
+        "b": "osm-1029",
+        "parcel": "P-029"
+      },
+      "P-030": {
+        "a": "MSB-030",
+        "b": "osm-1030",
+        "parcel": "P-030"
+      }
+    },
+    "crossing_building": "MSB-010"
+  },
+  "records": {
+    "links": {
+      "PROP-1001": "P-001",
+      "PROP-1002": "P-002",
+      "PROP-1003": "P-003",
+      "PROP-1004": "P-004",
+      "PROP-1005": "P-005",
+      "PROP-1007": "P-007",
+      "PROP-1008": "P-008",
+      "PROP-1009": "P-009",
+      "PROP-1010": "P-010",
+      "PROP-1011": "P-011",
+      "PROP-1012": "P-012",
+      "PROP-1013": "P-013",
+      "PROP-1014": "P-014",
+      "PROP-1015": "P-015",
+      "PROP-1016": "P-016",
+      "PROP-1017": "P-017",
+      "PROP-1018": "P-018",
+      "PROP-1019": "P-019",
+      "PROP-1020": "P-020",
+      "PROP-1021": "P-021",
+      "PROP-1022": "P-022",
+      "PROP-1023": "P-023",
+      "PROP-1024": "P-024",
+      "PROP-1025": "P-025",
+      "PROP-1026": "P-026",
+      "PROP-1027": "P-027",
+      "PROP-1028": "P-028",
+      "PROP-1029": "P-029",
+      "PROP-1030": "P-030"
+    },
+    "unmatched": [
+      "PROP-9001"
+    ],
+    "duplicate": "PROP-1016",
+    "wrong_point": "PROP-1023"
+  },
+  "changes": {
+    "added": [
+      "MSB-N01",
+      "MSB-N02"
+    ],
+    "removed": [
+      "MSB-002",
+      "MSB-017"
+    ],
+    "geometry_modified": [
+      "MSB-021"
+    ],
+    "within_uncertainty": [
+      "MSB-024"
+    ],
+    "attribute_changed": [
+      "MSB-013"
+    ]
+  }
+}
