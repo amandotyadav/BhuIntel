@@ -26,6 +26,7 @@ DEFAULTS = {
     "sliver_max_area_m2": 100.0,
     "duplicate_hausdorff_m": 0.01,
     "snap_tolerance_m": 0.5,
+    "near_miss_m": 3.0,  # an unsnapped end this close to another segment is an undershoot/overshoot
 }
 
 
@@ -128,13 +129,20 @@ def run_topology(db: Session, version_id: int, params: dict | None = None) -> di
                   SELECT id, source_id_raw, ST_StartPoint(ST_LineMerge(geom_work)) AS pt FROM source_features WHERE {base}
                   UNION ALL
                   SELECT id, source_id_raw, ST_EndPoint(ST_LineMerge(geom_work)) FROM source_features WHERE {base})
-                SELECT e.id, e.source_id_raw, count(*) AS dangling_ends FROM ends e
+                SELECT e.id, e.source_id_raw, count(*) AS dangling_ends,
+                       min((SELECT min(ST_Distance(o.geom_work, e.pt)) FROM source_features o
+                            WHERE o.dataset_version_id=:v AND o.id <> e.id)) AS gap
+                FROM ends e
                 WHERE NOT EXISTS (SELECT 1 FROM source_features o WHERE o.dataset_version_id=:v AND o.id <> e.id
                                   AND ST_DWithin(o.geom_work, e.pt, :tol))
-                GROUP BY e.id, e.source_id_raw"""), {"v": version_id, "tol": tol}).mappings():
-            upsert_conflict(db, pid, "dangling_segment", [r["id"]], [version_id], 0.7,
-                            f"Segment '{r['source_id_raw'] or r['id']}' has {r['dangling_ends']} unconnected end(s) "
-                            f"(snap tolerance {tol} m).", {"dangling_ends": r["dangling_ends"]})
+                  AND EXISTS (SELECT 1 FROM source_features o WHERE o.dataset_version_id=:v AND o.id <> e.id
+                              AND ST_DWithin(o.geom_work, e.pt, :near))
+                GROUP BY e.id, e.source_id_raw"""), {"v": version_id, "tol": tol, "near": p["near_miss_m"]}).mappings():
+            upsert_conflict(db, pid, "dangling_segment", [r["id"]], [version_id], 0.8,
+                            f"Segment '{r['source_id_raw'] or r['id']}' ends {r['gap']:.2f} m from another segment without "
+                            f"connecting (undershoot/overshoot; snap tolerance {tol} m, near-miss {p['near_miss_m']} m). "
+                            "Network terminals far from other lines are not flagged.",
+                            {"dangling_ends": r["dangling_ends"], "gap_m": r["gap"]})
             counts["dangling_segment"] += 1
         comps = db.execute(text(
             f"""SELECT cid, array_agg(id) AS ids FROM (

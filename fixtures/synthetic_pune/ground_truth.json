@@ -149,6 +149,16 @@
       "category": "attribute_conflict",
       "property": "PROP-1016",
       "field": "land_use"
+    },
+    {
+      "category": "dangling_segment",
+      "segment": "S5",
+      "dataset": "utility_lines"
+    },
+    {
+      "category": "disconnected_network",
+      "segment": "S4",
+      "dataset": "utility_lines"
     }
   ],
   "buildings": {

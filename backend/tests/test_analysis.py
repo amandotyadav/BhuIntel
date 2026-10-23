@@ -102,7 +102,10 @@ def test_ml_refuses_without_labels_then_trains_on_synthetic_labels(analyst, revi
     assert "GroupShuffleSplit" in res["training_info"]["split"]
     assert res["metrics"]["evaluated_on"].endswith("synthetic_fixture")
     assert res["metrics"]["probability_calibration"].startswith("none")
-    print("\n[synthetic-fixture ML evaluation] model:", m, "\nbaseline:", base)  # recorded in docs/TEST_RESULTS.md
+    info = res["training_info"]
+    print("\n[synthetic-fixture ML evaluation] labels:", info["n_labels"], "train:", info["n_train"], "test:",
+          info["n_test"], "groups:", info["groups"], "classes:", info["class_distribution"],
+          "\nmodel:", m, "\nbaseline:", base)  # recorded in docs/TESTING.md
     assert reviewer.post(f"{P}/{proj}/ml/models/{res['model_version_id']}/activate").status_code == 403
     admin.ok(admin.post(f"{P}/{proj}/ml/models/{res['model_version_id']}/activate"))
     rf = analyst.ok(analyst.post(f"{P}/{proj}/match-runs", json={"left_version_id": va, "right_version_id": vb,
@@ -182,8 +185,13 @@ def test_utility_network_topology(analyst, proj):
     vid = _upload_process(analyst, proj, did, "utility_lines.gpkg")
     j = wait_job(analyst, proj, analyst.ok(analyst.post(f"{P}/{proj}/topology", json={"version_id": vid})))
     cats = j["result"]["conflicts_by_category"]
-    assert cats.get("disconnected_network") == 1
-    assert cats.get("dangling_segment", 0) >= 1
+    assert cats.get("disconnected_network") == 2  # isolated S4, and S5 which the undershoot leaves unconnected
+    # only the undershoot (S5 stops 1.2 m short of S2) is dangling; ordinary network terminals are not
+    assert cats.get("dangling_segment") == 1
+    fc = analyst.ok(analyst.get(f"{P}/{proj}/conflicts", params={"category": "dangling_segment", "status": ""}))
+    seg = analyst.ok(analyst.get(f"{P}/{proj}/features/{fc['features'][0]['properties']['feature_ids'][0]}"))
+    assert seg["properties"]["attributes"]["segment_id"] == "S5"
+    assert "'S5'" in fc["features"][0]["properties"]["explanation"]
 
 
 def test_version_conflict_on_stale_correction(proj):

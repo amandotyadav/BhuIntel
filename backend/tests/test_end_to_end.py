@@ -185,6 +185,8 @@ def test_detects_all_fixture_conflicts(scenario, analyst):
     cats = _categories(scenario["conflicts"])
     missing = []
     for exp in TRUTH["conflicts"]:
+        if exp.get("dataset") == "utility_lines":
+            continue  # utility topology is covered by test_analysis.test_utility_network_topology
         cat = exp["category"]
         found = False
         for f in cats.get(cat, []):
@@ -363,3 +365,13 @@ def test_record_linking_metrics(scenario, analyst):
     assert classes[TRUTH["records"]["wrong_point"]] == "possible"
     # records whose parcel is absent from this layer, or unknown plots, stay unlinked
     assert "PROP-9001" not in best and "PROP-1030" not in best
+
+
+def test_building_on_no_parcel_is_flagged(scenario, analyst):
+    """MSB-030 sits on parcel P-030, which is absent from the municipal layer -> must be raised for review."""
+    pid = scenario["pid"]
+    hits = []
+    for f in _categories(scenario["conflicts"]).get("unmatched_feature", []):
+        if "lies in no parcel" in f["properties"]["explanation"]:
+            hits += raw_ids(analyst, pid, f["properties"]["feature_ids"])
+    assert "MSB-030" in hits

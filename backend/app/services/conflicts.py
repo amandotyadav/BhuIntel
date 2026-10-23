@@ -58,7 +58,6 @@ CATEGORY_DEFAULTS: dict[str, dict] = {
                                  "action": "Geometry type not expected for this dataset kind."},
     "dangling_segment": {"severity": "low", "legal": False, "action": "Line end not connected; check network snapping."},
     "disconnected_network": {"severity": "low", "legal": False, "action": "Isolated network component."},
-    "uncertain_repair": {"severity": "medium", "legal": False, "action": "Approve or reject the proposed repair."},
 }
 
 
@@ -249,6 +248,17 @@ def detect_from_run(db: Session, run: MatchRun, cfg: dict | None = None) -> dict
         for c in cands:
             if (c.features.get("building_coverage") or 0) >= min_share:
                 by_building[c.left_feature_id].append(c)
+        # buildings that lie in no parcel: missing parcel, unparcelled land or encroachment -> review
+        parcel_ds = db.get(Dataset, db.get(DatasetVersion, run.right_version_id).dataset_id)
+        orphans = db.execute(text(
+            "SELECT id FROM source_features WHERE dataset_version_id=:v AND duplicate_of IS NULL AND geom IS NOT NULL "
+            "AND (review_status IS NULL OR review_status <> 'rejected')"), {"v": run.left_version_id}).scalars().all()
+        orphan_rows = _feature_rows(db, [b for b in orphans if b not in by_building])
+        for bid, B in orphan_rows.items():
+            add("unmatched_feature", [bid], 0.8,
+                f"Building '{B['source_id_raw'] or bid}' ({B['dataset_name']}) lies in no parcel of {parcel_ds.name} "
+                f"(coverage < {min_share * 100:.0f}% in every parcel): possible missing parcel, unparcelled land or "
+                "encroachment.", {"sources": [_src(B)], "parcel_dataset": parcel_ds.name}, key="building_no_parcel")
         for bid, cs in by_building.items():
             if len(cs) < 2:
                 continue
@@ -289,7 +299,10 @@ def detect_from_run(db: Session, run: MatchRun, cfg: dict | None = None) -> dict
             if best.features.get("point_inside") == 0.0 and (best.features.get("id_similarity") or 0) >= 0.9:
                 add("attribute_conflict", [rid, P["id"]], 0.6,
                     f"Record '{R['source_id_raw']}' references parcel '{P['source_id_raw']}' but its coordinates "
-                    f"fall outside that parcel ({(best.features.get('point_distance_m') or 0):.1f} m away).",
+                    f"fall outside that parcel ({best.features['point_distance_m']:.1f} m from its boundary)."
+                    if best.features.get("point_distance_m") is not None else
+                    f"Record '{R['source_id_raw']}' references parcel '{P['source_id_raw']}' but its coordinates fall "
+                    "outside that parcel.",
                     {"field": "location", "match_score": best.score, "sources": [_src(R), _src(P)]}, key="location")
             ra, pa = R["normalized_attributes"] or {}, P["normalized_attributes"] or {}
             for fld in ("land_use",):

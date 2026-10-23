@@ -148,6 +148,8 @@ def main(out: Path) -> None:
         {"category": "unmatched_record", "property": "PROP-9001"},
         {"category": "duplicate_record", "property": "PROP-1016"},
         {"category": "attribute_conflict", "property": "PROP-1016", "field": "land_use"},
+        {"category": "dangling_segment", "segment": "S5", "dataset": "utility_lines"},
+        {"category": "disconnected_network", "segment": "S4", "dataset": "utility_lines"},
     ]
 
     # ---------------- Buildings ----------------
@@ -231,9 +233,10 @@ def main(out: Path) -> None:
         LineString([(E0, N0 - 5), (E0 + 100, N0 - 5)]),
         LineString([(E0 + 100, N0 - 5), (E0 + 190, N0 - 5)]),
         LineString([(E0 + 100, N0 - 5), (E0 + 100, N0 - 40)]),
-        LineString([(E0 + 50, N0 - 20), (E0 + 70, N0 - 30)]),  # disconnected / dangling
+        LineString([(E0 + 50, N0 - 20), (E0 + 70, N0 - 30)]),  # disconnected component
+        LineString([(E0 + 150, N0 - 30), (E0 + 150, N0 - 6.2)]),  # undershoot: stops 1.2 m short of S2
     ]
-    gpd.GeoDataFrame({"segment_id": ["S1", "S2", "S3", "S4"], "data_class": [SYN] * 4}, geometry=lines,
+    gpd.GeoDataFrame({"segment_id": ["S1", "S2", "S3", "S4", "S5"], "data_class": [SYN] * 5}, geometry=lines,
                      crs=CRS_WORK).to_file(out / "utility_lines.gpkg", layer="lines", driver="GPKG")
 
     # ---------------- Study area ----------------

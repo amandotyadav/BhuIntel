@@ -220,10 +220,16 @@ def _record_candidates(db: Session, left: int, right: int, tol: float) -> list[d
             "has_pt": r["has_pt"], "inside": None if s is None else bool(s["inside"]),
             "dist": None if s is None else float(s["dist"]),
         })
-    # records with points but no spatial hit still get explicit point_inside=False for id-linked pairs
-    for o in out:
-        if o["has_pt"] and o["inside"] is None:
-            o["inside"] = False
+    # id-linked pairs whose point lies beyond the search radius: point is outside; measure the real distance
+    far = [(o["lid"], o["rid"]) for o in out if o["has_pt"] and o["inside"] is None]
+    if far:
+        dist = {(r["lid"], r["rid"]): float(r["d"]) for r in db.execute(text(
+            "SELECT a.id AS lid, b.id AS rid, ST_Distance(a.geom_work, b.geom_work) AS d FROM source_features a, "
+            "source_features b, unnest(CAST(:l AS bigint[]), CAST(:r AS bigint[])) AS p(l, r) WHERE a.id = p.l AND b.id = p.r"),
+            {"l": [p[0] for p in far], "r": [p[1] for p in far]}).mappings()}
+        for o in out:
+            if (o["lid"], o["rid"]) in dist:
+                o["inside"], o["dist"] = False, dist[(o["lid"], o["rid"])]
     return out
 
 

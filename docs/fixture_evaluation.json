@@ -1,0 +1,68 @@
+{
+  "parcel_matching (geometry-identical parcels, incl. swapped id)": {
+    "tp": 26,
+    "fp": 0,
+    "fn": 1,
+    "precision": 1.0,
+    "recall": 0.963,
+    "f1": 0.9811
+  },
+  "building_matching (source A <-> B)": {
+    "tp": 22,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "record_linking": {
+    "tp": 27,
+    "fp": 0,
+    "fn": 1,
+    "precision": 1.0,
+    "recall": 0.9643,
+    "f1": 0.9818,
+    "note": "PROP-1023 has contradictory evidence (point in a neighbouring parcel) and is deliberately routed to review as 'possible'"
+  },
+  "building_to_parcel_assignment (excluding the deliberately straddling building)": {
+    "tp": 23,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "conflict_detection_recall": {
+    "introduced": 17,
+    "detected": 17,
+    "recall": 1.0,
+    "total_conflicts_raised": 32
+  },
+  "change_detection": {
+    "added": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "removed": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "geometry_modified": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "within_uncertainty_not_flagged_as_modified": true
+  }
+}

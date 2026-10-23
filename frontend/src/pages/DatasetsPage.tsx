@@ -14,7 +14,7 @@ import {
 import { useProjectId } from "./ProjectLayout";
 
 const KINDS = ["parcels", "buildings", "property_records", "utility_lines", "imagery", "other"] as const;
-const CANONICAL = ["parcel_id", "ulpin", "property_id", "building_id", "land_use", "area_sqm", "surveyed_at",
+const CANONICAL = ["parcel_id", "ulpin", "property_id", "building_id", "segment_id", "land_use", "area_sqm", "surveyed_at",
   "updated_at", "owner_name", "ward", "village", "address", "building_levels", "height_m"];
 
 const dsSchema = z.object({

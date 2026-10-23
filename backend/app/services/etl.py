@@ -52,6 +52,7 @@ ID_TARGET_BY_KIND = {
     "buildings": "building_id",
     "predicted_buildings": "building_id",
     "property_records": "property_id",
+    "utility_lines": "segment_id",
 }
 EXPECTED_GEOMETRY = {
     "parcels": {"Polygon", "MultiPolygon"},

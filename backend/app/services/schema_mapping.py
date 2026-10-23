@@ -35,6 +35,10 @@ CANONICAL_FIELDS: dict[str, dict] = {
         "type": "string", "role": "id",
         "aliases": ["bldg_id", "building_no", "building_number", "bldgid", "building_code", "structure_id"],
     },
+    "segment_id": {
+        "type": "string", "role": "id",
+        "aliases": ["segment_id", "seg_id", "line_id", "pipe_id", "asset_id", "link_id"],
+    },
     "land_use": {
         "type": "string", "role": "category",
         "aliases": ["landuse", "land_use_type", "lu", "lu_code", "usage", "use_type", "zone", "land_use_class",

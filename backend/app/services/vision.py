@@ -41,7 +41,7 @@ class ModelInfo:
 
 class ThresholdBaseline:
     def __init__(self):
-        self.info = ModelInfo("threshold_baseline", "1.0", "n/a (deterministic algorithm, Apache-2.0 code)", None,
+        self.info = ModelInfo("threshold_baseline", "1.0", "n/a (deterministic algorithm in this repository)", None,
                               [1, 2, 3], 512, is_ml=False)
         self._threshold: float | None = None
 
